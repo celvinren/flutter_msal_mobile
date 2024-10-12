@@ -1,3 +1,6 @@
+## 1.0.2
+- Fix single and multiple account mode selection issue
+
 ## 1.0.1
 - Change example_3_19_0 to example
 - Add more details to package description

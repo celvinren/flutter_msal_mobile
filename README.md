@@ -6,13 +6,23 @@
 
 # Installation
 
-Add the following to your pubspec.yaml
+Add the following to your pubspec.yaml or run 'dart pub add flutter_msal_mobile'
 ```yaml
 dependencies:
-  flutter_msal: ^1.0.0
+  flutter_msal_mobile: ^[version]
 ```
 
 # Android Setup
+
+This package supports both Single and Multiple Account modes, automatically selecting based on user configuration. Single Account mode is ideal for apps needing one active user, while Multiple Account mode enables seamless switching between accounts if tokens are valid. Re-authentication is required only if both access and refresh tokens have expired.
+
+To optimize Multiple Account mode:
+
+- Use Refresh Tokens: Ensure token renewal to avoid disruptions.
+- Adjust Token Lifetimes: Configure longer lifetimes in Azure AD for easier account switching.
+
+The following is the android setup steps:
+
 1. Open **android > app > src > main** > **AndroidManifest.xml**.
 2. Add BrowserTabActivity to your AndroidManifest.xml file.
     * `[your-base64-signature-hash]` should be replaced with the base64 signature hash you generated while setting up your Android app in the Azure app registration.
@@ -106,9 +116,9 @@ assets
 
 # Usage
 
-Import flutter_msal package
+Import flutter_msal_mobile package
 ```dart
-import 'package:flutter_msal/flutter_msal.dart';
+import 'package:flutter_msal_mobile/flutter_msal_mobile.dart';
 ```
 
 Initialize MSAL, replace [clientId], [scopes], [tenantId], [authority] with yours.

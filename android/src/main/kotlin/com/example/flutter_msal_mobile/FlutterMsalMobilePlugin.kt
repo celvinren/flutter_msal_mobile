@@ -86,8 +86,8 @@ class FlutterMsalMobilePlugin: FlutterPlugin, ActivityAware, MethodChannel.Metho
       val json = configFile.readText()
       val mapType = object : TypeToken<Map<String, Any>>() {}.type
       val configMap: Map<String, Any> = Gson().fromJson(json, mapType)
-      return configMap["account_mode"] as String? ?: "SINGLE" // Default to SINGLE
-  }
+      return (configMap["account_mode"] as String?)?.uppercase() ?: "SINGLE" // Default to SINGLE
+    }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
       channel.setMethodCallHandler(null)
