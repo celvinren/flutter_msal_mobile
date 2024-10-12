@@ -1,0 +1,38 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_msal_mobile (1.0.0):
+    - Flutter
+    - MSAL (~> 1.4.0)
+  - MSAL (1.4.2):
+    - MSAL/app-lib (= 1.4.2)
+  - MSAL/app-lib (1.4.2)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_msal_mobile (from `.symlinks/plugins/flutter_msal_mobile/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+
+SPEC REPOS:
+  trunk:
+    - MSAL
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_msal_mobile:
+    :path: ".symlinks/plugins/flutter_msal_mobile/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_msal_mobile: 0f529c40967a426f9acbdd6a61e1dbf46627f64c
+  MSAL: 51aff0b03348afbd46194588fdff61d5dc2118a2
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+
+PODFILE CHECKSUM: 775997f741c536251164e3eacf6e34abf2eb7a17
+
+COCOAPODS: 1.15.2
