@@ -24,3 +24,5 @@ flutter:
       android:
         package: com.example.flutter_msal_mobile
         pluginClass: FlutterMsalMobilePlugin
+      ios:
+        pluginClass: FlutterMsalMobilePlugin
