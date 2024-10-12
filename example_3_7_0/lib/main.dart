@@ -1,67 +1,106 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_msal_mobile/flutter_msal_mobile.dart';
+import 'package:flutter_msal_mobile/models/models.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _clientId = '<CLIENT_ID>';
+  final _tenantId = '<TENANT_ID>';
+  late final _authority =
+      'https://login.microsoftonline.com/$_tenantId/oauth2/v2.0/authorize';
+  final _scopes = <String>[
+    'https://graph.microsoft.com/user.read',
+    // Add other scopes here if required.
+  ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('MSAL example app'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: getToken,
+                child: const Text('Get Token'),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: getTokenSilently,
+                child: const Text('Get Token silent'),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: logout,
+                child: const Text('Logout'),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
+  }
+
+  Future<MsalMobileClient> getMsalAuth() async {
+    return MsalMobileClient.init(
+      clientId: _clientId,
+      scopes: _scopes,
+      androidConfig: AndroidConfig(
+        configFilePath: 'assets/msal_config.json',
+        tenantId: _tenantId,
+      ),
+      iosConfig: IosConfig(authority: _authority),
+    );
+  }
+
+  Future<void> getToken() async {
+    try {
+      final msalAuth = await getMsalAuth();
+      final user = await msalAuth.acquireToken();
+      log('User data: ${user?.toJson()}');
+    } on MsalException catch (e) {
+      log('Msal exception with error: ${e.errorMessage}');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> getTokenSilently() async {
+    try {
+      final msalAuth = await getMsalAuth();
+      final user = await msalAuth.acquireTokenSilent();
+      log('User data: ${user?.toJson()}');
+    } on MsalException catch (e) {
+      log('Msal exception with error: ${e.errorMessage}');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final msalAuth = await getMsalAuth();
+      await msalAuth.logout();
+    } on MsalException catch (e) {
+      log('Msal exception with error: ${e.errorMessage}');
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
