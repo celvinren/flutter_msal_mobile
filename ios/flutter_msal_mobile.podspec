@@ -5,9 +5,9 @@
 Pod::Spec.new do |s|
   s.name             = 'flutter_msal_mobile'
   s.version          = '1.0.0'
-  s.summary          = 'A new Flutter plugin project.'
+  s.summary          = 'Flutter plugin project for MSAL ios.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+Flutter plugin project for MSAL ios.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
