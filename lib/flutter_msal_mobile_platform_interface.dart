@@ -1,3 +1,4 @@
+import 'package:flutter_msal_mobile/models/models.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_msal_mobile_method_channel.dart';
@@ -23,7 +24,22 @@ abstract class FlutterMsalMobilePlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
+  /// Initializes MSAL with required data.
+  Future<void> init({
+    required String clientId,
+    String? loginHint,
+    AndroidConfig? androidConfig,
+    IosConfig? iosConfig,
+  });
+
+  /// Acquire a token interactively for the given [scopes]
+  /// return [UserAdModel] contains user information but token and expiration date
+  Future<MsalUser?> acquireToken({required List<String> scopes});
+
+  /// Acquire a token silently, with no user interaction, for the given [scopes]
+  /// return [UserAdModel] contains user information but token and expiration date
+  Future<MsalUser?> acquireTokenSilent({required List<String> scopes});
+
+  /// Logout user from Microsoft account.
+  Future<void> logout();
 }
