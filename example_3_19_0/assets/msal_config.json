@@ -1,0 +1,19 @@
+{
+  "client_id": "<app-registration-client-id>",
+  "authorization_user_agent": "DEFAULT",
+  "redirect_uri": "msauth://<your-package-name>/<url-encoded-package-signature-hash>",
+  "ios_redirect_uri": "msauth.<your-ios-bundle-identifier>://auth",
+  "account_mode": "SINGLE",
+  "authorities": [
+    {
+      "type": "AAD",
+      "audience": {
+        "type": "AzureADMyOrg",
+        "tenant_id": "organizations"
+      }
+    }
+  ],
+  "logging": {
+    "pii_enabled": false
+  }
+}
