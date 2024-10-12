@@ -1,6 +1,6 @@
 name: flutter_msal_mobile
-description: Flutter plugin project for MSAL mobile.
-version: 1.0.0
+description: A Flutter package for integrating MSAL-based mobile authentication, designed for secure and efficient user identity management in enterprise and business applications.
+version: 1.0.1
 homepage: https://calvinr.com
 repository: https://github.com/celvinren/flutter_msal_mobile
 issue_tracker: https://github.com/celvinren/flutter_msal_mobile/issues
