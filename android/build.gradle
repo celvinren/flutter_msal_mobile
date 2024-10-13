@@ -1,7 +1,7 @@
 group 'com.example.flutter_msal_mobile'
 version '1.0-SNAPSHOT'
 
-def msalVersion = "5.0.+"
+def msalVersion = "4.2.+"
 if (project.hasProperty("distMsalVersion")) {
     msalVersion = distMsalVersion
 }
