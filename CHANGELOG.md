@@ -1,3 +1,6 @@
+## 1.0.2+1
+- Updated README for improved documentation.
+
 ## 1.0.2
 - Fix single and multiple account mode selection issue
 - Downgrade msal android sdk to 4.2 because incompatible issue with minSDK 24 lower
