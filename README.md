@@ -1,10 +1,10 @@
 # Project Requirements
 
 * Flutter version greater than 3.7.0
-* Android minSdkVersion of at least 19
-* iOS version of at least 14.0
+* Android minSdkVersion of at least 24 
+* iOS version of at least 14.0 [Requirement](https://learn.microsoft.com/en-us/entra/msal/objc/#supported-versions)
 
-Limitation: This project uses MSAL Android SDK version 4.2, rather than 4.2+ because versions after 4.2 introduce a dependency on opentelemetry-bom:1.18.0, which requires a minimum Android SDK version of 24. This constraint ensures compatibility with the project's minimum minSdkVersion of 19.
+Issue with minSdkVersion below 24: The Android MSAL SDK depends on opentelemetry-bom:1.18.0, which requires a minimum Android SDK version of 24. If you set minSdkVersion below 24, the SDK might still work, but it could result in errors. Therefore, it’s recommended to set minSdkVersion to 24 or higher.
 
 # Installation
 

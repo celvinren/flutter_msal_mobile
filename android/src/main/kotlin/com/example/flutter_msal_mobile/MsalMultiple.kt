@@ -19,7 +19,6 @@ class MsalMultiple(context: Context, activity: FlutterActivity?) : MsalBase(cont
     private fun getApplicationCreatedListener(
             result: MethodChannel.Result
     ): IMultipleAccountApplicationCreatedListener {
-
         return object : IMultipleAccountApplicationCreatedListener {
             override fun onCreated(application: IMultipleAccountPublicClientApplication) {
                 clientApplication = application
@@ -33,6 +32,10 @@ class MsalMultiple(context: Context, activity: FlutterActivity?) : MsalBase(cont
     }
 
     override fun initialize(configFilePath: File, result: MethodChannel.Result) {
+        if (isClientInitialized()) {
+            result.success(true)
+            return
+        }
         PublicClientApplication.createMultipleAccountPublicClientApplication(
                 context,
                 configFilePath,
@@ -43,29 +46,29 @@ class MsalMultiple(context: Context, activity: FlutterActivity?) : MsalBase(cont
     override fun loadAccounts(result: MethodChannel.Result) {
         val multipleAccountApp = clientApplication as IMultipleAccountPublicClientApplication
         multipleAccountApp.getAccounts(
-                object : IPublicClientApplication.LoadAccountsCallback {
-                    override fun onTaskCompleted(accounts: List<IAccount>) {
-                        accountList = accounts
-                        result.success(accounts.map { it.username }) // Return a list of usernames
-                    }
-
-                    override fun onError(exception: MsalException?) {
-                        result.error(
-                                "AUTH_ERROR",
-                                "Failed to load accounts: ${exception?.message}",
-                                null
-                        )
-                    }
+            object : IPublicClientApplication.LoadAccountsCallback {
+                override fun onTaskCompleted(accounts: List<IAccount>) {
+                    accountList = accounts
+                    result.success(accounts.map { it.username }) // Return a list of usernames
                 }
+
+                override fun onError(exception: MsalException?) {
+                    result.error(
+                        "AUTH_ERROR",
+                        "Failed to load accounts: ${exception?.message}",
+                        null
+                    )
+                }
+            }
         )
     }
 
     override fun signOut(result: MethodChannel.Result) {
         if (!isClientInitialized()) {
             result.error(
-                    "AUTH_ERROR",
-                    "Client must be initialized before attempting to sign out",
-                    null
+                "AUTH_ERROR",
+                "Client must be initialized before attempting to sign out",
+                null
             )
             return
         }
@@ -77,25 +80,25 @@ class MsalMultiple(context: Context, activity: FlutterActivity?) : MsalBase(cont
 
         val multipleAccountApp = clientApplication as IMultipleAccountPublicClientApplication
         multipleAccountApp.removeAccount(
-                accountList.first(),
-                object : IMultipleAccountPublicClientApplication.RemoveAccountCallback {
-                    override fun onRemoved() {
-                        loadAccounts(result)
-                    }
-
-                    override fun onError(exception: MsalException) {
-                        result.error("AUTH_ERROR", exception.message, null)
-                    }
+            accountList.first(),
+            object : IMultipleAccountPublicClientApplication.RemoveAccountCallback {
+                override fun onRemoved() {
+                    loadAccounts(result)
                 }
+
+                override fun onError(exception: MsalException) {
+                    result.error("AUTH_ERROR", exception.message, null)
+                }
+            }
         )
     }
 
     override fun acquireToken(scopes: Array<String>?, result: MethodChannel.Result) {
         if (!isClientInitialized()) {
             result.error(
-                    "AUTH_ERROR",
-                    "Client must be initialized before attempting to acquire a token.",
-                    null
+                "AUTH_ERROR",
+                "Client must be initialized before attempting to acquire a token.",
+                null
             )
             return
         }
@@ -117,9 +120,9 @@ class MsalMultiple(context: Context, activity: FlutterActivity?) : MsalBase(cont
     override fun acquireTokenSilent(scopes: Array<String>?, result: MethodChannel.Result) {
         if (!isClientInitialized()) {
             result.error(
-                    "AUTH_ERROR",
-                    "Client must be initialized before attempting to acquire a silent token.",
-                    null
+                "AUTH_ERROR",
+                "Client must be initialized before attempting to acquire a silent token.",
+                null
             )
             return
         }
@@ -137,9 +140,9 @@ class MsalMultiple(context: Context, activity: FlutterActivity?) : MsalBase(cont
         val selectedAccount = accountList.first()
         val builder = AcquireTokenSilentParameters.Builder()
         builder.withScopes(scopes.toList())
-                .forAccount(selectedAccount)
-                .fromAuthority(selectedAccount.authority)
-                .withCallback(getAuthSilentCallback(result))
+            .forAccount(selectedAccount)
+            .fromAuthority(selectedAccount.authority)
+            .withCallback(getAuthSilentCallback(result))
 
         clientApplication.acquireTokenSilentAsync(builder.build())
     }

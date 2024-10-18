@@ -59,7 +59,8 @@ abstract class MsalBase(protected val context: Context, protected var activity: 
             override fun onError(exception: MsalException) {
                 when (exception) {
                     is MsalUiRequiredException ->
-                            result.error("UI_REQUIRED", exception.message, null)
+                        result.error("UI_REQUIRED", exception.message, null)
+
                     else -> result.error("AUTH_ERROR", exception.message, null)
                 }
             }

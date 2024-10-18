@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -22,7 +23,7 @@ class MethodChannelFlutterMsalMobile extends FlutterMsalMobilePlatform {
     AndroidConfig? androidConfig,
     IosConfig? iosConfig,
   }) async {
-    return _ErrorHandler.guard(() async {
+    await _ErrorHandler.guard(() async {
       late final Map<String, dynamic> arguments;
 
       if (Platform.isAndroid) {
@@ -85,7 +86,7 @@ class MethodChannelFlutterMsalMobile extends FlutterMsalMobilePlatform {
 
   @override
   Future<void> logout() async {
-    return _ErrorHandler.guard(() async {
+    await _ErrorHandler.guard(() async {
       if (Platform.isAndroid) {
         await methodChannel.invokeMethod('loadAccounts');
       }
@@ -97,12 +98,17 @@ class MethodChannelFlutterMsalMobile extends FlutterMsalMobilePlatform {
 class _ErrorHandler {
   static Future<T> guard<T>(Future<T> Function() function) async {
     try {
-      return await function();
+      final result = await function();
+      return result;
     } on PlatformException catch (e) {
-      debugPrint('PlatformException error: $e');
+      if (!kReleaseMode) {
+        log('PlatformException error: $e', name: 'flutter_msal_mobile');
+      }
       throw e.msalException;
     } catch (e) {
-      debugPrint('Generate error: $e');
+      if (!kReleaseMode) {
+        log('Generate error: $e', name: 'flutter_msal_mobile');
+      }
       rethrow;
     }
   }

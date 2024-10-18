@@ -31,41 +31,46 @@ class MsalSingle(context: Context, activity: FlutterActivity?) : MsalBase(contex
     }
 
     override fun initialize(configFilePath: File, result: MethodChannel.Result) {
+        if (isClientInitialized()) {
+            result.success(true)
+            return
+        }
+
         PublicClientApplication.createSingleAccountPublicClientApplication(
-                context,
-                configFilePath,
-                getApplicationCreatedListener(result)
+            context,
+            configFilePath,
+            getApplicationCreatedListener(result)
         )
     }
 
     override fun loadAccounts(result: MethodChannel.Result) {
         val singleAccountApp = clientApplication as ISingleAccountPublicClientApplication
         singleAccountApp.getCurrentAccountAsync(
-                object : ISingleAccountPublicClientApplication.CurrentAccountCallback {
-                    override fun onAccountLoaded(account: IAccount?) {
-                        if (account != null) {
-                            result.success(account.username)
-                        }
-                        else {
-                            result.error("AUTH_ERROR", "Failed to load account: No signed in account", null)
-                        }
+            object : ISingleAccountPublicClientApplication.CurrentAccountCallback {
+                override fun onAccountLoaded(account: IAccount?) {
+                    if (account != null) {
+                        result.success(account.username)
                     }
-
-                    override fun onAccountChanged(
-                            priorAccount: IAccount?,
-                            currentAccount: IAccount?
-                    ) {
-                        result.success(currentAccount?.username)
-                    }
-
-                    override fun onError(exception: MsalException) {
-                        result.error(
-                                "AUTH_ERROR",
-                                "Failed to load account: ${exception.message}",
-                                null
-                        )
+                    else {
+                        result.error("AUTH_ERROR", "Failed to load account: No signed in account", null)
                     }
                 }
+
+                override fun onAccountChanged(
+                    priorAccount: IAccount?,
+                    currentAccount: IAccount?
+                ) {
+                    result.success(currentAccount?.username)
+                }
+
+                override fun onError(exception: MsalException) {
+                    result.error(
+                        "AUTH_ERROR",
+                        "Failed to load account: ${exception.message}",
+                        null
+                    )
+                }
+            }
         )
     }
 
@@ -81,24 +86,24 @@ class MsalSingle(context: Context, activity: FlutterActivity?) : MsalBase(contex
 
         val singleAccountApp = clientApplication as ISingleAccountPublicClientApplication
         singleAccountApp.signOut(
-                object : ISingleAccountPublicClientApplication.SignOutCallback {
-                    override fun onSignOut() {
-                        result.success(true)
-                    }
-
-                    override fun onError(exception: MsalException) {
-                        result.error("AUTH_ERROR", exception.message, null)
-                    }
+            object : ISingleAccountPublicClientApplication.SignOutCallback {
+                override fun onSignOut() {
+                    result.success(true)
                 }
+
+                override fun onError(exception: MsalException) {
+                    result.error("AUTH_ERROR", exception.message, null)
+                }
+            }
         )
     }
 
     override fun acquireToken(scopes: Array<String>?, result: MethodChannel.Result) {
         if (!isClientInitialized()) {
             result.error(
-                    "AUTH_ERROR",
-                    "Client must be initialized before attempting to acquire a token.",
-                    null
+                "AUTH_ERROR",
+                "Client must be initialized before attempting to acquire a token.",
+                null
             )
             return
         }
@@ -110,9 +115,9 @@ class MsalSingle(context: Context, activity: FlutterActivity?) : MsalBase(contex
 
         val builder = AcquireTokenParameters.Builder()
         builder.withScopes(scopes.toList())
-                .withPrompt(Prompt.LOGIN)
-                .withCallback(getAuthCallback(result))
-                .startAuthorizationFromActivity(activity)
+            .withPrompt(Prompt.LOGIN)
+            .withCallback(getAuthCallback(result))
+            .startAuthorizationFromActivity(activity)
 
         clientApplication.acquireToken(builder.build())
     }
@@ -120,9 +125,9 @@ class MsalSingle(context: Context, activity: FlutterActivity?) : MsalBase(contex
     override fun acquireTokenSilent(scopes: Array<String>?, result: MethodChannel.Result) {
         if (!isClientInitialized()) {
             result.error(
-                    "AUTH_ERROR",
-                    "Client must be initialized before attempting to acquire a silent token.",
-                    null
+                "AUTH_ERROR",
+                "Client must be initialized before attempting to acquire a silent token.",
+                null
             )
             return
         }
