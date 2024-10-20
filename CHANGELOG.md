@@ -1,3 +1,6 @@
+## 1.0.3+1
+- Readme modify
+
 ## 1.0.3
 - Fix IPublicClientApplication init issue
 - Upgrade android msal sdk to 5.1
