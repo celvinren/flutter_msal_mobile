@@ -155,7 +155,10 @@ class MsalSingle(context: Context, activity: FlutterActivity?) : MsalBase(contex
 
                 clientApplication.acquireTokenSilentAsync(builder.build())
             }
-
+            
+            // The following methods are required to implement the interface
+            // but are not used for getCurrentAccountAsync not acquireTokenSilent
+            // acquireTokenSilent will return withCallback on MsalBase getAuthSilentCallback 
             override fun onAccountChanged(priorAccount: IAccount?, currentAccount: IAccount?) {
                 // If account changes, try to acquire token silently again
             }

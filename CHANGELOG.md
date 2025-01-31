@@ -1,3 +1,6 @@
+## 1.0.4
+- Fix: When refresh token expired in silent mode, report Signed in account does not match when get access token. 
+
 ## 1.0.3+1
 - Readme modify
 

@@ -36,7 +36,7 @@ abstract class MsalBase(protected val context: Context, protected var activity: 
             }
 
             override fun onError(exception: MsalException) {
-                result.error("AUTH_ERROR", "Authentication failed ${exception.message}", null)
+                result.error("AUTH_ERROR", "Authentication failed, type: ${exception.javaClass}, message: ${exception.message}", null)
             }
 
             override fun onCancel() {
@@ -67,7 +67,8 @@ abstract class MsalBase(protected val context: Context, protected var activity: 
         }
     }
 
-    internal abstract fun initialize(configFilePath: File, result: MethodChannel.Result) // 子类实现
+    // This method is abstract, so it must be implemented by MsalSingle and MsalMultiple
+    internal abstract fun initialize(configFilePath: File, result: MethodChannel.Result) 
 
     internal abstract fun signOut(result: MethodChannel.Result)
 
